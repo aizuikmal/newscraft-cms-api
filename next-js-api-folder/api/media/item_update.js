@@ -1,0 +1,25 @@
+import axios from 'axios';
+
+require('dotenv').config()
+const API_SERVER = process.env.API_SERVER
+
+export default async (req, res) => {
+
+    const { id } = req.query
+    const { desc } = req.body
+
+    const active_pub = req.cookies['_nc_active_publisher']
+
+    const find = { status : 1, publisher_id: active_pub, id }
+    
+    const ret = await axios.post(API_SERVER, {
+        key: process.env.API_KEY,
+        db: 'assets',
+        type: 'updateOne',
+        collection: 'assets',
+        find,
+        payload: { desc }
+    })
+
+    res.json({data:ret.data})
+}
